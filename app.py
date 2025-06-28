@@ -4,6 +4,8 @@ import io
 import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="POCT Barcode Usage Monitor", layout="wide")
+# Add logo
+st.image("843eb762-d00e-44f5-a84d-0a5bc11089c5.png", width=200)
 st.title("🔎 POCT Barcode Sharing Detector")
 
 uploaded_file = st.file_uploader("Upload POCT Middleware CSV", type=["csv"])

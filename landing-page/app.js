@@ -110,24 +110,33 @@ function SuggestSection() {
       <h2 className="text-3xl font-bold mb-4">Suggest a Tool</h2>
       <button onClick={() => setOpen(!open)} className="mb-4 bg-teal-500 hover:bg-teal-600 px-4 py-2 rounded-md">{open ? 'Hide Form' : 'Show Form'}</button>
       {open && (
-        <form className="space-y-4" onSubmit={e => {e.preventDefault(); setLoading(true); setTimeout(()=>setLoading(false), 1500);}}>
+        <form
+          action="https://formspree.io/f/mblyqwgj"
+          method="POST"
+          className="space-y-4"
+        >
           <div>
             <label className="block mb-1" htmlFor="name">Name</label>
-            <input id="name" type="text" className="w-full px-3 py-2 bg-gray-700 rounded" />
+            <input name="name" id="name" type="text" required className="w-full px-3 py-2 bg-gray-700 rounded" />
           </div>
           <div>
             <label className="block mb-1" htmlFor="email">Email</label>
-            <input id="email" type="email" className="w-full px-3 py-2 bg-gray-700 rounded" />
+            <input name="email" id="email" type="email" required className="w-full px-3 py-2 bg-gray-700 rounded" />
           </div>
           <div>
             <label className="block mb-1" htmlFor="idea">Tool Idea *</label>
-            <textarea id="idea" required className="w-full px-3 py-2 bg-gray-700 rounded" />
+            <textarea name="idea" id="idea" required className="w-full px-3 py-2 bg-gray-700 rounded" />
           </div>
           <div>
             <label className="block mb-1" htmlFor="usecase">Use Case</label>
-            <textarea id="usecase" className="w-full px-3 py-2 bg-gray-700 rounded" />
+            <textarea name="usecase" id="usecase" className="w-full px-3 py-2 bg-gray-700 rounded" />
           </div>
-          <button type="submit" className="bg-teal-500 hover:bg-teal-600 px-4 py-2 rounded-md text-white flex items-center" disabled={loading}>{loading ? 'Submitting...' : 'Submit'}</button>
+          <button
+            type="submit"
+            className="bg-teal-500 hover:bg-teal-600 px-4 py-2 rounded-md text-white"
+          >
+            Submit
+          </button>
         </form>
       )}
     </section>

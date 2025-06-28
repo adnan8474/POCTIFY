@@ -22,6 +22,10 @@ with st.expander("📁 Upload & Instructions", expanded=True):
     with open("POCTIFY_BarcodeSharing_Template.csv", "rb") as f:
         st.download_button("Download CSV Template", f, file_name="POCTIFY_Template.csv", mime="text/csv")
     st.dataframe(pd.read_csv("POCTIFY_BarcodeSharing_Template.csv").head())
+    if df['Timestamp'].isnull().all():
+    st.error("❌ No valid timestamps found. Please make sure the format is correct (e.g., DD/MM/YYYY HH:MM) and try again.")
+    st.stop()
+
 
 uploaded_file = st.file_uploader("Upload POCT Middleware File (.csv or .xlsx)", type=["csv", "xlsx"])
 
@@ -31,7 +35,7 @@ if uploaded_file:
     else:
         df = pd.read_excel(uploaded_file)
 
-    df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+   df['Timestamp'] = pd.to_datetime(df['Timestamp'], dayfirst=True, errors='coerce')
     df = df.sort_values(['Operator_ID', 'Timestamp'])
     df['Time_Diff_Min'] = df.groupby('Operator_ID')['Timestamp'].diff().dt.total_seconds() / 60
     df['Prev_Location'] = df.groupby('Operator_ID')['Location'].shift()

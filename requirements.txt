@@ -6,3 +6,7 @@ scipy
 plotly
 openpyxl
 kaleido
+
+fastapi
+uvicorn[standard]
+python-multipart

@@ -1,3 +1,8 @@
 streamlit
 pandas
 matplotlib
+numpy
+scipy
+plotly
+openpyxl
+kaleido

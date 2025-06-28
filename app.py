@@ -8,6 +8,14 @@ st.set_page_config(page_title="POCT Barcode Usage Monitor", layout="wide")
 st.image("843eb762-d00e-44f5-a84d-0a5bc11089c5.png", width=200)
 st.title("🔎 POCT Barcode Sharing Detector")
 
+with open("POCTIFY_BarcodeSharing_Template_With_Instructions.xlsx", "rb") as f:
+    st.download_button(
+        label="📥 Download Excel Template",
+        data=f,
+        file_name="POCTIFY_BarcodeSharing_Template.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
 uploaded_file = st.file_uploader("Upload POCT Middleware CSV", type=["csv"])
 
 if uploaded_file:

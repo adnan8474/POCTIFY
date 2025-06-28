@@ -70,7 +70,10 @@ if uploaded_file:
         st.stop()
 
     df = df.sort_values(["Operator_ID", "Timestamp"])
-    df['Time_Diff_Min'] = df.groupby('Operator_ID')['Timestamp'].diff().dt.total_seconds() / 60
+    df['Time_Diff_Min'] = (
+        df.groupby('Operator_ID')['Timestamp'].diff().dt.total_seconds() / 60
+    )
+    df['Time_Diff_Min'] = df['Time_Diff_Min'].round(2)
     df['Prev_Location'] = df.groupby('Operator_ID')['Location'].shift()
 
     df['Rapid_Test'] = df['Time_Diff_Min'] < rapid_threshold

@@ -30,32 +30,7 @@ if uploaded_file:
         df = pd.read_csv(uploaded_file)
     else:
         df = pd.read_excel(uploaded_file)
-
-    required_cols = ["Timestamp", "Operator_ID", "Location", "Device_ID", "Test_Type"]
-    missing_cols = [c for c in required_cols if c not in df.columns]
-    if missing_cols:
-        st.error(f"Missing columns: {', '.join(missing_cols)}")
-        st.stop()
-
-    raw_ts = df["Timestamp"].astype(str)
-    df["Timestamp"] = pd.to_datetime(
-        raw_ts, errors="coerce", infer_datetime_format=True
-    )
-
-    # second attempt for day/month format like 28/06/2025 09:12
-    unparsed = df["Timestamp"].isna()
-    if unparsed.any():
-        df.loc[unparsed, "Timestamp"] = pd.to_datetime(
-            raw_ts[unparsed], errors="coerce", format="%d/%m/%Y %H:%M"
-        )
-
-    # fallback using dayfirst=True for any remaining
-    unparsed = df["Timestamp"].isna()
-    if unparsed.any():
-        df.loc[unparsed, "Timestamp"] = pd.to_datetime(
-            raw_ts[unparsed], errors="coerce", dayfirst=True
-        )
-
+        
     if df["Timestamp"].isna().any():
         st.error(
             f"Failed to parse {df['Timestamp'].isna().sum()} timestamps. Example rows below:"

@@ -11,7 +11,7 @@ st.image("843eb762-d00e-44f5-a84d-0a5bc11089c5.png", width=150)
 st.markdown("<h1 style='text-align:center;'>POCT Barcode Sharing Detector</h1>", unsafe_allow_html=True)
 
 st.sidebar.header("⚙️ Controls")
-rapid_threshold = st.sidebar.number_input("Rapid test threshold (sec)", min_value=10, max_value=600, value=60, step=10)
+rapid_threshold = st.sidebar.number_input("Rapid test threshold (min)", min_value=0.1, max_value=60.0, value=1.0, step=0.1)
 conflict_window = st.sidebar.number_input("Location conflict window (min)", min_value=1, max_value=60, value=5, step=1)
 hour_threshold = st.sidebar.number_input("Hourly test threshold", min_value=1, max_value=60, value=8, step=1)
 mode = st.sidebar.selectbox("Mode", ["Strict", "Balanced", "Exploratory"])
@@ -33,11 +33,11 @@ if uploaded_file:
 
     df['Timestamp'] = pd.to_datetime(df['Timestamp'])
     df = df.sort_values(['Operator_ID', 'Timestamp'])
-    df['Time_Diff'] = df.groupby('Operator_ID')['Timestamp'].diff().dt.total_seconds()
+    df['Time_Diff_Min'] = df.groupby('Operator_ID')['Timestamp'].diff().dt.total_seconds() / 60
     df['Prev_Location'] = df.groupby('Operator_ID')['Location'].shift()
 
-    df['Rapid_Test'] = df['Time_Diff'] < rapid_threshold
-    df['Location_Conflict'] = (df['Location'] != df['Prev_Location']) & (df['Time_Diff'] <= conflict_window * 60)
+    df['Rapid_Test'] = df['Time_Diff_Min'] < rapid_threshold
+    df['Location_Conflict'] = (df['Location'] != df['Prev_Location']) & (df['Time_Diff_Min'] <= conflict_window)
 
     df['Hour'] = df['Timestamp'].dt.hour
     hourly_counts = df.groupby(['Operator_ID', 'Hour']).size().rename('Hour_Count')
@@ -73,7 +73,7 @@ if uploaded_file:
     st.dataframe(df.head())
 
     st.subheader("🚩 Flagged Events")
-    st.dataframe(flagged_rows[['Timestamp', 'Operator_ID', 'Location', 'Device_ID', 'Reason']])
+    st.dataframe(flagged_rows[['Timestamp', 'Operator_ID', 'Location', 'Device_ID', 'Time_Diff_Min', 'Reason']])
 
     st.subheader("📊 Analytics Dashboard")
     fig_bar = px.bar(df.groupby('Hour').size().reset_index(name='Tests'), x='Hour', y='Tests', title='Tests per Hour')

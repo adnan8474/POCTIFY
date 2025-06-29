@@ -1,3 +1,6 @@
+fastapi
+uvicorn[standard]
+fpdf2
 streamlit
 pandas
 matplotlib

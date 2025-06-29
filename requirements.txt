@@ -9,3 +9,4 @@ scipy
 plotly
 openpyxl
 kaleido
+python-multipart
